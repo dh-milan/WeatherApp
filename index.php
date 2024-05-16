@@ -15,42 +15,41 @@ if (mysqli_query($conn, $createDatabase)) {
 mysqli_select_db($conn, 'Weather');
 $createTable = "CREATE TABLE IF NOT EXISTS city (
 
-    WeatherCondition VARCHAR(100),
-    WeatherIcon VARCHAR(100),
-    Temperature VARCHAR(100),
-    CityName VARCHAR(100),
-    Pressure VARCHAR(100),
-    Windspeed VARCHAR(100),
+    Weather VARCHAR(100),
+    Icon VARCHAR(100),
+    temp VARCHAR(100),
+    city_name VARCHAR(100),
+    pressure VARCHAR(100),
+    Wind VARCHAR(100),
     Humidity VARCHAR(100),
-    DateeTime DATETIME
+    TimeDate DATETIME
 )";
 if (mysqli_query($conn, $createTable)) {    
 } else { 
 }
 if(isset($_GET['q'])){
-    $CityName = $_GET['q'];
+    $city_name = $_GET['q'];
 }else{
-    $CityName = "Montgomery";
+    $city_name = "Montgomery";
 }
-$selectAllData = "SELECT * FROM city where CityName = '$CityName' ";
+$selectAllData = "SELECT * FROM city where city_name = '$city_name' ";
 $result = mysqli_query($conn, $selectAllData);
 $row = mysqli_fetch_assoc($result);
 if ($row == null) {
     $apiKey = "a9c001c6a7b8dc2d8044a547c5fac590";
-    $url = "https://api.openweathermap.org/data/2.5/weather?units=metric&q=".$CityName.'&apikey=' . $apiKey;
+    $url = "https://api.openweathermap.org/data/2.5/weather?units=metric&q=".$city_name.'&apikey=' . $apiKey;
     $response = file_get_contents($url);
-    echo $response;
     $data = json_decode($response, true);
-    $WeatherCondition = $data['weather'][0]['description'];
-    $WeatherIcon= $data['weather'][0]['icon'];
-    $Temperature = $data['main']['temp'];
+    $Weather = $data['weather'][0]['description'];
+    $Icon= $data['weather'][0]['icon'];
+    $temp = $data['main']['temp'];
     $Datee = $data['dt'];
-    $Pressure = $data['main']['pressure'];
-    $Windspeed = $data['wind']['speed'];
+    $pressure = $data['main']['pressure'];
+    $Wind = $data['wind']['speed'];
     $Humidity = $data['main']['humidity'];
-    $DateeTime = date('Y-m-d H:i:s');
-    $insertData = "INSERT INTO city (WeatherCondition, WeatherIcon, Temperature , CityName, Pressure, Windspeed, Humidity, DateeTime)
-         VALUES ('$WeatherCondition','$WeatherIcon', '$Temperature', '$CityName', '$Pressure', '$Windspeed', '$Humidity','$DateeTime')";
+    $TimeDate = date('Y-m-d H:i:s');
+    $insertData = "INSERT INTO city (Weather, Icon, temp , city_name, pressure, Wind, Humidity, TimeDate)
+         VALUES ('$Weather','$Icon', '$temp', '$city_name', '$pressure', '$Wind', '$Humidity','$TimeDate')";
     if (mysqli_query($conn, $insertData)) {
     } else {
     }

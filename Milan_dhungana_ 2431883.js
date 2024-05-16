@@ -1,16 +1,15 @@
-const currentDate = new Date();
-const date = currentDate.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: '2-digit' });
-
-document.getElementById('today').innerText = date;
-
 const API_KEY = 'a9c001c6a7b8dc2d8044a547c5fac590';
 const search = document.getElementById('search');
 const cityName = document.getElementById('city_name');
-const temp = document.getElementById('Temperature');
+const temp = document.getElementById('temp');
 const humidity = document.getElementById('humidity');
-const wind = document.getElementById('windspeed');
-const pressure = document.getElementById('Pressure');
+const wind = document.getElementById('wind');
+const pressure = document.getElementById('pressure');
 const weatherIcon = document.getElementById('weatherIcon');
+const today = document.getElementById('today');
+const weather = document.getElementById('weather');
+
+
 
 search.addEventListener('click', () => {
   const city = document.querySelector('input').value;
@@ -21,16 +20,18 @@ async function makeRequest(city){
     const response = await fetch(`http://localhost/weatherapp/index.php?q=${city}`);
     const data = await response.json();
     console.log(data)
-    if(data.Temperature){
-        cityName.innerText = data.CityName
-        temp.innerHTML = `${data.Temperature}`
+    if(data.temp){
+        cityName.innerText = data.city_name
+        temp.innerHTML = `${data.temp}`
         
-        let icon_url = `https://openweathermap.org/img/wn/${data.WeatherIcon}@2x.png`
+        let icon_url = `https://openweathermap.org/img/wn/${data.Icon}@2x.png`
         console.log(icon_url)
         weatherIcon.src = icon_url;
         humidity.innerText = `${data.Humidity}%`;
-        wind.innerHTML= `${data.Windspeed} km/h`; 
-        pressure.innerText = `${data.Pressure}`; 
+        wind.innerHTML= `${data.Wind} km/h`; 
+        pressure.innerText = `${data.pressure}`; 
+        today.innerText = data.TimeDate
+        weather.innerText = data.Weather
     }
   }
   catch (error){
