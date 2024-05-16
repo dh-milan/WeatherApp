@@ -6,11 +6,10 @@ document.getElementById('today').innerText = date;
 const API_KEY = 'a9c001c6a7b8dc2d8044a547c5fac590';
 const search = document.getElementById('search');
 const cityName = document.getElementById('city_name');
-const temp = document.getElementById('temp');
+const temp = document.getElementById('Temperature');
 const humidity = document.getElementById('humidity');
-const wind = document.getElementById('wind');
-const pressure = document.getElementById('pressure');
-
+const wind = document.getElementById('windspeed');
+const pressure = document.getElementById('Pressure');
 const weatherIcon = document.getElementById('weatherIcon');
 
 search.addEventListener('click', () => {
@@ -19,18 +18,20 @@ search.addEventListener('click', () => {
 });
 async function makeRequest(city){
   try {
-    const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}`);
+    const response = await fetch(`http://localhost/weatherapp/index.php?q=${city}`);
     const data = await response.json();
-    
-    cityName.innerText = city
-    temp.innerHTML = `${Math.round(data.main.temp - 273.15)}°C / ${Math.round((data.main.temp - 273.15) * 9/5 + 32)}°F`
-    var icon_code = data.weather[0].icon
-    var icon_url = ` https://openweathermap.org/img/wn/${icon_code}@2x.png`
-    weatherIcon.src = icon_url;
-
-    humidity.innerText = `${data.main.humidity}%`;
-    wind.innerText = `${data.wind.speed} km/h`; 
-    pressure.innerText = `${data.main.pressure}`; 
+    console.log(data)
+    if(data.Temperature){
+        cityName.innerText = data.CityName
+        temp.innerHTML = `${data.Temperature}`
+        
+        let icon_url = `https://openweathermap.org/img/wn/${data.WeatherIcon}@2x.png`
+        console.log(icon_url)
+        weatherIcon.src = icon_url;
+        humidity.innerText = `${data.Humidity}%`;
+        wind.innerHTML= `${data.Windspeed} km/h`; 
+        pressure.innerText = `${data.Pressure}`; 
+    }
   }
   catch (error){
     console.log(error)
