@@ -19,23 +19,29 @@ async function makeRequest(city){
   try {
     const response = await fetch(`http://localhost/weatherapp/index.php?q=${city}`);
     const data = await response.json();
-    console.log(data)
     if(data.temp){
-        cityName.innerText = data.city_name
-        temp.innerHTML = `${data.temp}`
-        
-        let icon_url = `https://openweathermap.org/img/wn/${data.Icon}@2x.png`
-        console.log(icon_url)
-        weatherIcon.src = icon_url;
-        humidity.innerText = `${data.Humidity}%`;
-        wind.innerHTML= `${data.Wind} km/h`; 
-        pressure.innerText = `${data.pressure}`; 
-        today.innerText = data.TimeDate
-        weather.innerText = data.Weather
+        setData(data)
+        localStorage.setItem(city, JSON.stringify(data))
+    }
+    else{
+      data = JSON.parse(localStorage.getItem(city));
+      setData(data)
     }
   }
   catch (error){
     console.log(error)
   }
+}
+function setData(data){
+  cityName.innerText = data.city_name
+  temp.innerHTML = `${data.temp}`
+  let icon_url = `https://openweathermap.org/img/wn/${data.Icon}@2x.png`
+  console.log(icon_url)
+  weatherIcon.src = icon_url;
+  humidity.innerText = `${data.Humidity}%`;
+  wind.innerHTML= `${data.Wind} km/h`; 
+  pressure.innerText = `${data.pressure}`; 
+  today.innerText = data.TimeDate
+  weather.innerText = data.Weather
 }
 makeRequest('Montgomery');
